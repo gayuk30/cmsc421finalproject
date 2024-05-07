@@ -178,7 +178,7 @@ def video_id_from_url(video_url):
         return video_url.split('v=')[1].split('&')[0]
     return None
 
-def save_questions_to_json(questions, filename='questions.json'):
+def save_questions_to_json(questions, filename='src/components/questions.json'):
     with open(filename, 'w') as file:
         json.dump(questions, file, indent=4)
 
