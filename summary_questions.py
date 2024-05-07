@@ -10,7 +10,7 @@ Original file is located at
 # Commented out IPython magic to ensure Python compatibility.
 !pip install youtube-transcript-api
 !pip install transformers
-# %pip install openai==0.28
+!pip install openai==0.28
 
 import openai
 from getpass import getpass
