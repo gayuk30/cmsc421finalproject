@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Summary and Questions</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Video Summary</h1>
+    </header>
+    <div class="container">
+        <!-- YouTube Video Embed -->
+        {% if video_id %}
+        <section class="video-section">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </section>
+        {% endif %}
+        <section class="summary-section">
+            <h2>Summary:</h2>
+            <p>{{ summary }}</p>
+        </section>
+        <section class="keywords-section">
+            <h2>Keywords:</h2>
+            <p>{{ keywords | join(', ') }}</p>
+        </section>
+        <section class="resources-section">
+            <h2>Related Resources:</h2>
+            <ul>
+                {% for resource in resources %}
+                <li><a href="{{ resource }}" target="_blank">{{ resource }}</a></li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% if questions %}
+        <section class="questions-section">
+            <h2>Generated Questions:</h2>
+            <ul>
+                {% for question in questions %}
+                <li>{{ question }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+        <a href="/" class="button">Summarize another video</a>
+    </div>
+</body>
+</html>
