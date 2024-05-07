@@ -6,17 +6,18 @@ body {
     padding: 0;
     background: #f4f4f4;
     color: #333;
+    text-align: center; 
 }
 
 /* Container for content */
 .container {
     width: 80%;
-    margin: auto;
+    margin: 20px auto; 
     overflow: hidden;
-    padding: 20px;
+    padding: 40px; 
     background: white;
     border-radius: 8px;
-    box-shadow: 0 0 10px #ccc;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2); 
 }
 
 /* Header styles */
@@ -28,36 +29,39 @@ header {
 }
 
 /* Input field styling */
-input[type="text"], input[type="checkbox"] {
+input[type="text"], input[type="checkbox"], input[type="url"] {
     display: block;
     width: 95%;
-    padding: 10px;
-    margin: 10px auto;
+    padding: 15px;
+    margin: 20px auto; 
     border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
 /* Styling for labels */
 label {
-    margin-left: 5%;
-    font-weight: bold;
+    display: block; 
+    margin: 15px auto; 
+    font-size: 1.2em; 
+    color: #333;
 }
 
 /* Button styling */
 button {
     display: block;
-    width: 60%;
-    margin: 20px auto;
-    padding: 10px;
+    width: 50%; 
+    margin: 20px auto; 
+    padding: 15px 0; 
     border: none;
-    background-color: #333;
+    background-color: #5C67F2;
     color: white;
     cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 8px; 
+    font-size: 1.2em; 
 }
 
 button:hover {
-    background-color: #555;
+    background-color: #3e47f0; 
 }
 
 /* Unordered list styles */
@@ -65,10 +69,10 @@ ul {
     list-style: none;
     padding: 0;
 }
-
+/* Provides spacing between list items */
 ul li {
     background: #eee;
-    margin: 5px;
+    margin: 5px 0; 
     padding: 10px;
     border-radius: 5px;
 }
@@ -79,6 +83,7 @@ ul li {
     padding: 20px;
     margin-top: 20px;
     border-radius: 8px;
+    border: 1px solid #ddd; 
 }
 
 .summary-section h2, .questions-section h2 {
@@ -102,7 +107,6 @@ ul li {
 }
 
 /* Button to return to home from summary page */
-/* Button to return to home from summary page */
 .back-button {
     display: inline-block;
     padding: 10px 20px;
@@ -121,25 +125,41 @@ ul li {
 /* Ensure link colors and text decoration are appealing */
 a {
     color: #333;
-    text-decoration: none; /* Remove underline from links */
+    text-decoration: none; 
 }
 
 a:hover {
-    text-decoration: underline; /* Only underline on hover for better usability */
+    text-decoration: underline; 
 }
 
 /* Additional responsive design elements */
 @media (max-width: 768px) {
     .container {
-        width: 95%; /* Full width on smaller screens */
+        width: 95%; 
         padding: 10px;
     }
 
     button, input[type="text"], input[type="checkbox"] {
-        width: 90%; /* Adjust width for smaller devices */
+        width: 90%; 
     }
 
     header, .back-button {
         padding: 10px;
     }
 }
+
+/* Enhancements for checkbox */
+input[type="checkbox"] {
+    width: 20px;  
+    height: 20px; 
+    cursor: pointer; 
+}
+
+
+label {
+    display: block; 
+    margin: 10px 0; 
+    font-size: 16px; 
+    cursor: pointer; 
+}
+

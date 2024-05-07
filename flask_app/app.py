@@ -29,30 +29,74 @@ nltk.download('stopwords')
 def index():
     return render_template('index.html')
 
+def extract_transcript_segment(transcript_list, start_time, end_time):
+    if end_time <= start_time:
+        raise ValueError("End time must be after start time.")
+
+    segment = []
+    for item in transcript_list:
+        # Validate that each item has the 'start' and 'text' keys
+        if 'start' in item and 'text' in item:
+            if start_time <= item['start'] < end_time:
+                segment.append(item['text'])
+        else:
+            raise KeyError("Transcript item missing required 'start' or 'text' keys")
+
+    return ' '.join(segment) if segment else "No text found in the specified segment."
+
+def fetch_transcript(video_id):
+    try:
+        transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
+        if not transcript_list:
+            raise ValueError("Failed to fetch or parse transcript.")
+        return transcript_list
+    except Exception as e:
+        raise Exception(f"Failed to fetch transcript: {e}")
+
+# Update your route handling to better capture and display exceptions
 @app.route('/summarize', methods=['POST'])
 def summarize():
-    url = request.form['url']
-    api_key = request.form['api_key']
-    generate_qs = 'generate_questions' in request.form and request.form['generate_questions'] == 'on'
-    openai.api_key = api_key
+    try:
+        url = request.form['url']
+        api_key = request.form['api_key']
+        whole_video = 'whole_video' in request.form and request.form['whole_video'] == 'on'
+        openai.api_key = api_key
 
-    video_id = get_video_id(url)
-    if video_id:
-        transcript = fetch_transcript(video_id)
-        if transcript:
-            summary = summarize_text(transcript)
-            keywords = extract_keywords(summary)
-            resources = find_resources(summary)
-            questions = []
-            filtered_questions = []
-            if generate_qs:
-                questions = generate_questions(summary)
-                filtered_questions = filter_questions(questions)
-            return render_template('summary.html', summary=summary, keywords=keywords, resources=resources, questions=filtered_questions, video_id=video_id, generate_qs=generate_qs)
+        video_id = get_video_id(url)
+        if not video_id:
+            raise ValueError("Invalid YouTube URL")
+
+        transcript_list = fetch_transcript(video_id)
+        if whole_video:
+            transcript_segment = ' '.join([item['text'] for item in transcript_list])
         else:
-            return jsonify({'error': 'Failed to fetch transcript'}), 400
-    else:
-        return jsonify({'error': 'Invalid YouTube URL'}), 400
+            start_time_hms = request.form.get('start_time')
+            end_time_hms = request.form.get('end_time')
+            start_seconds = convert_hms_to_seconds(start_time_hms)
+            end_seconds = convert_hms_to_seconds(end_time_hms)
+            transcript_segment = extract_transcript_segment(transcript_list, start_seconds, end_seconds)
+
+        if not transcript_segment:
+            raise ValueError("No transcript data found")
+
+        summary = summarize_text(transcript_segment)
+        questions = generate_questions(transcript_segment)
+        filtered_questions = filter_questions(questions)
+        keywords = extract_keywords(transcript_segment)
+        return render_template('summary.html', summary=summary, questions=filtered_questions, video_id=video_id, keywords=keywords)
+
+    except Exception as e:
+        return render_template('error.html', message=str(e))
+
+
+def convert_hms_to_seconds(hms):
+    try:
+        h, m, s = map(int, hms.split(':'))
+        return h * 3600 + m * 60 + s
+    except ValueError:
+        raise ValueError("Invalid time format. Use hh:mm:ss.")
+
+
 
 def get_video_id(url):
     from urllib.parse import urlparse, parse_qs
@@ -60,20 +104,14 @@ def get_video_id(url):
     video_id = parse_qs(query).get('v')
     return video_id[0] if video_id else None
 
-def fetch_transcript(video_id):
-    try:
-        transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
-        transcript_text = ' '.join([item['text'] for item in transcript_list])
-        return transcript_text
-    except Exception:
-        return None
+
 
 def summarize_text(text):
     try:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "Provide a comprehensive summary of this transcript."},
+                {"role": "system", "content": "Provide a comprehensive summary of this transcript and give me the accuracy rate of the summary."},
                 {"role": "user", "content": text}
             ],
             max_tokens=600

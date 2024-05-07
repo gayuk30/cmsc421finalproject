@@ -1,23 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Best Learning Tool</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header>
-        <h1>Best Learning Tool</h1>
+        <h1>TLDW: TOO LONG DIDN'T WATCH</h1>
+        <h1 style="font-style: italic;">For all your student needs</h1>
     </header>
     <div class="container">
         <form action="/summarize" method="post">
             <label for="url">YouTube Video URL:</label>
-            <input type="text" id="url" name="url" placeholder="https://www.youtube.com/watch?v=..." required><br>
+            <input type="url" id="url" name="url" placeholder="https://www.youtube.com/watch?v=..." required><br>
+            
             <label for="api_key">OpenAI API Key:</label>
             <input type="text" id="api_key" name="api_key" placeholder="Enter your OpenAI API Key" required><br>
-            <input type="checkbox" id="generate_questions" name="generate_questions">
-            <label for="generate_questions">Generate Questions from Summary</label><br>
+            
+            <label for="whole_video">Summarize whole video:</label>
+            <input type="checkbox" id="whole_video" name="whole_video"><br>
+            
+            <label for="start_time">Start Time (hh:mm:ss):</label>
+            <input type="text" id="start_time" name="start_time" placeholder="00:00:00" pattern="\d{2}:\d{2}:\d{2}" title="Time format: hh:mm:ss"><br>
+            
+            <label for="end_time">End Time (hh:mm:ss):</label>
+            <input type="text" id="end_time" name="end_time" placeholder="00:00:00" pattern="\d{2}:\d{2}:\d{2}" title="Time format: hh:mm:ss"><br>
+            
             <button type="submit">Summarize Video</button>
         </form>
+        
     </div>
 </body>
 </html>
