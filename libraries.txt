@@ -1,0 +1,11 @@
+Flask
+openai
+youtube-transcript-api
+spacy
+transformers
+nltk
+scikit-learn
+pandas
+requests
+beautifulsoup4
+googlesearch-python
